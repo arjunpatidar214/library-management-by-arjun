@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 
-const API = 'http://localhost:5000/api';
+const API = 'https://library-management-by-arjun.onrender.com/api';
 
 const Transactions = () => {
   const [transactions, setTransactions] = useState([]);

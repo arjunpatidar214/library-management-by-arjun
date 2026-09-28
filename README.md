@@ -100,7 +100,7 @@ npm start
 ```
 
 ### 4. Create First Admin User
-Use Postman or Thunder Client to POST to `http://localhost:5000/api/auth/register`:
+Use Postman or Thunder Client to POST to `https://library-management-by-arjun.onrender.com/api/auth/register`:
 ```json
 {
   "name": "Admin User",
