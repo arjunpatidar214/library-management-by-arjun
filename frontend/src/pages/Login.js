@@ -97,19 +97,13 @@ const Login = () => {
               color: 'white', border: 'none', borderRadius: '10px', fontSize: '15px',
               fontWeight: '600', cursor: 'pointer'
             }}>
-              {loading ? 'Login ho raha hai...' : '🔑 Login '}
+              {loading ? 'Login ho raha hai...' : '🔑 Login'}
             </button>
-            <div style={{ marginTop: '16px', padding: '12px', background: '#f0f9ff', borderRadius: '10px', fontSize: '12px', color: '#0369a1', textAlign: 'center' }}>
-              
-            </div>
           </form>
         )}
 
         {tab === 'register' && (
           <form onSubmit={handleRegister}>
-            <div style={{ marginBottom: '14px', padding: '10px 14px', background: '#f0fdf4', borderRadius: '8px', fontSize: '12px', color: '#166534' }}>
-        
-            </div>
             <div style={{ marginBottom: '14px' }}>
               <label style={{ display: 'block', marginBottom: '6px', fontWeight: '600', fontSize: '13px', color: '#374151' }}>Full Name</label>
               <input style={inputStyle} type="text" placeholder="Apna poora naam"
@@ -127,15 +121,15 @@ const Login = () => {
             </div>
             <div style={{ marginBottom: '24px' }}>
               <label style={{ display: 'block', marginBottom: '6px', fontWeight: '600', fontSize: '13px', color: '#374151' }}>Confirm Password</label>
-              <input style={inputStyle} type="password" placeholder="Password dobara likho"
+              <input style={inputStyle} type="password" placeholder="Confirm password"
                 value={form.confirmPassword} onChange={e => setForm({ ...form, confirmPassword: e.target.value })} required />
             </div>
             <button type="submit" disabled={loading} style={{
-              width: '100%', padding: '13px', background: '#10b981',
+              width: '100%', padding: '13px', background: '#4f46e5',
               color: 'white', border: 'none', borderRadius: '10px', fontSize: '15px',
               fontWeight: '600', cursor: 'pointer'
             }}>
-              {loading ? 'Account ban raha hai...' : '✍️ CREATE ACCOUNT '}
+              {loading ? 'Account ban raha hai...' : '✍️ Register'}
             </button>
           </form>
         )}
