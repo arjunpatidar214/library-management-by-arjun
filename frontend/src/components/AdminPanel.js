@@ -35,7 +35,7 @@ const AdminPanel = ({ stats }) => {
     e.preventDefault();
     try {
       await axios.post(`${API}/auth/create-librarian`, form);
-      toast.success('Librarian account bana gaya! ✅');
+      toast.success('Librarian account created successfully');
       setShowModal(false);
       setForm({ name: '', email: '', password: '' });
       fetchUsers();
