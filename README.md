@@ -80,16 +80,16 @@ cd backend
 npm install
 ```
 
-Create `.env` file:
+Copy `backend/.env.example` to `backend/.env`, then set a private `JWT_SECRET`. For local MongoDB, keep the example `MONGO_URI`; for Atlas, use your Atlas connection string instead. Never commit `.env` or share its values.
+
+Start the backend:
 ```
-MONGO_URI=mongodb://localhost:27017/librarydb
-JWT_SECRET=your_super_secret_key
-PORT=5000
+npm run dev
 ```
 
-Start backend:
+Create the first administrator by setting `ADMIN_NAME`, `ADMIN_EMAIL`, and `ADMIN_PASSWORD` in `backend/.env`, then run this once:
 ```bash
-npm run dev
+npm run seed:admin
 ```
 
 ### 3. Frontend Setup
@@ -99,16 +99,16 @@ npm install
 npm start
 ```
 
-### 4. Create First Admin User
-Use Postman or Thunder Client to POST to `https://library-management-by-arjun.onrender.com/api/auth/register`:
-```json
-{
-  "name": "Admin User",
-  "email": "admin@library.com",
-  "password": "admin123",
-  "role": "admin"
-}
-```
+During local development the frontend uses `http://localhost:5000/api`. In production it uses the Render API URL below by default; set `REACT_APP_API_URL` in Vercel if your Render service uses a different URL.
+
+### Deployment: Render, Vercel, and Atlas
+- Render backend root directory: `backend`; build command: `npm install`; start command: `npm start`.
+- Set Render environment variables `MONGO_URI` (Atlas connection string) and `JWT_SECRET` (a long, random secret). Render supplies `PORT` automatically.
+- In MongoDB Atlas, create a database user and allow network access from the Render service. Use a strong database password in the connection string.
+- Vercel frontend root directory: `frontend`; build command: `npm run build`; output directory: `build`.
+- `frontend/vercel.json` provides the SPA fallback so direct links and page refreshes work with React Router.
+- Set Vercel `REACT_APP_API_URL` to `https://library-management-by-arjun.onrender.com/api` (or the actual Render API URL), then redeploy the frontend.
+- To create the initial production admin, run `npm run seed:admin` from `backend` with the production `MONGO_URI`, `ADMIN_NAME`, `ADMIN_EMAIL`, and `ADMIN_PASSWORD` set. The seed never replaces an existing account.
 
 ## 🌐 API Endpoints
 

@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
-
-const API = 'https://library-management-by-arjun.onrender.com/api';
+import { API } from '../config';
 
 const MemberDashboard = () => {
   const { user } = useAuth();

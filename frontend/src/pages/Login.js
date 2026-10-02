@@ -2,8 +2,7 @@ import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { toast } from 'react-toastify';
 import axios from 'axios';
-
-const API = 'https://library-management-by-arjun.onrender.com/api';
+import { API } from '../config';
 
 const Login = () => {
   const [tab, setTab] = useState('login');

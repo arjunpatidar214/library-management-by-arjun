@@ -4,8 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import AdminPanel from '../components/AdminPanel';
 import LibrarianDashboard from '../components/LibrarianDashboard';
 import MemberDashboard from '../components/MemberDashboard';
-
-const API = 'https://library-management-by-arjun.onrender.com/api';
+import { API } from '../config';
 
 const Dashboard = () => {
   const { user } = useAuth();

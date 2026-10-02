@@ -15,14 +15,14 @@ router.post('/register', [
   if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
 
   try {
-    const { name, email, password, role } = req.body;
+    const { name, email, password } = req.body;
     const existing = await User.findOne({ email });
     if (existing) return res.status(400).json({ message: 'User already exists' });
 
-    const user = new User({ name, email, password, role });
+    const user = new User({ name, email, password, role: 'member' });
     await user.save();
 
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET || 'secret', { expiresIn: '7d' });
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '7d' });
     res.status(201).json({ token, user: { id: user._id, name, email, role: user.role } });
   } catch (err) {
     res.status(500).json({ message: 'Server error', error: err.message });
@@ -45,7 +45,7 @@ router.post('/login', [
     const isMatch = await user.comparePassword(password);
     if (!isMatch) return res.status(400).json({ message: 'Invalid credentials' });
 
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET || 'secret', { expiresIn: '7d' });
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '7d' });
     res.json({ token, user: { id: user._id, name: user.name, email, role: user.role } });
   } catch (err) {
     res.status(500).json({ message: 'Server error' });
@@ -84,7 +84,10 @@ router.post('/create-librarian', auth, adminOnly, [
     const librarian = new User({ name, email, password, role: 'librarian' });
     await librarian.save();
 
-    res.status(201).json({ message: 'Librarian account created', user: librarian });
+    res.status(201).json({
+      message: 'Librarian account created',
+      user: { id: librarian._id, name: librarian.name, email: librarian.email, role: librarian.role }
+    });
   } catch (err) {
     res.status(500).json({ message: 'Server error' });
   }

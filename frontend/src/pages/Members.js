@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
-
-const API = 'https://library-management-by-arjun.onrender.com/api';
+import { API } from '../config';
 
 const Members = () => {
   const [members, setMembers] = useState([]);

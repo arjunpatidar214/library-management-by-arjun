@@ -6,12 +6,13 @@ const Navbar = () => {
   const { user, logout } = useAuth();
   const location = useLocation();
 
-  const navLinks = [
+  const staffLinks = [
     { path: '/', label: '📊 Dashboard' },
     { path: '/books', label: '📚 Books' },
     { path: '/members', label: '👥 Members' },
     { path: '/transactions', label: '🔄 Transactions' },
   ];
+  const navLinks = user?.role === 'member' ? staffLinks.slice(0, 1) : staffLinks;
 
   return (
     <nav style={{

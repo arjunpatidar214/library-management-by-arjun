@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { body, validationResult } = require('express-validator');
 const Book = require('../models/Book');
-const { auth } = require('../middleware/auth');
+const { auth, adminOrLibrarian } = require('../middleware/auth');
 
 // GET all books
 router.get('/', auth, async (req, res) => {
@@ -34,7 +34,7 @@ router.get('/:id', auth, async (req, res) => {
 });
 
 // POST add book
-router.post('/', [auth,
+router.post('/', [auth, adminOrLibrarian,
   body('title').notEmpty(),
   body('author').notEmpty(),
   body('isbn').notEmpty(),
@@ -55,7 +55,7 @@ router.post('/', [auth,
 });
 
 // PUT update book
-router.put('/:id', auth, async (req, res) => {
+router.put('/:id', auth, adminOrLibrarian, async (req, res) => {
   try {
     const book = await Book.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
     if (!book) return res.status(404).json({ message: 'Book not found' });
@@ -66,7 +66,7 @@ router.put('/:id', auth, async (req, res) => {
 });
 
 // DELETE book
-router.delete('/:id', auth, async (req, res) => {
+router.delete('/:id', auth, adminOrLibrarian, async (req, res) => {
   try {
     const book = await Book.findByIdAndDelete(req.params.id);
     if (!book) return res.status(404).json({ message: 'Book not found' });

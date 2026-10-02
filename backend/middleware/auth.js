@@ -6,7 +6,7 @@ const auth = async (req, res, next) => {
     const token = req.header('Authorization')?.replace('Bearer ', '');
     if (!token) return res.status(401).json({ message: 'No token, access denied' });
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'secret');
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
     const user = await User.findById(decoded.id).select('-password');
 
     if (!user) return res.status(401).json({ message: 'User not found' });
@@ -25,4 +25,11 @@ const adminOnly = (req, res, next) => {
   next();
 };
 
-module.exports = { auth, adminOnly };
+const adminOrLibrarian = (req, res, next) => {
+  if (!req.user || !['admin', 'librarian'].includes(req.user.role)) {
+    return res.status(403).json({ message: 'Librarian access required' });
+  }
+  next();
+};
+
+module.exports = { auth, adminOnly, adminOrLibrarian };

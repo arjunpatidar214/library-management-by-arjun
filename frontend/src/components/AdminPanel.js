@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
-
-const API = 'https://library-management-by-arjun.onrender.com/api';
+import { API } from '../config';
 
 const StatCard = ({ icon, label, value, color }) => (
   <div style={{ background: 'white', borderRadius: '12px', padding: '20px', boxShadow: '0 1px 3px rgba(0,0,0,0.1)', flex: 1 }}>

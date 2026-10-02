@@ -2,10 +2,10 @@ const express = require('express');
 const router = express.Router();
 const { body, validationResult } = require('express-validator');
 const Member = require('../models/Member');
-const { auth } = require('../middleware/auth');
+const { auth, adminOrLibrarian } = require('../middleware/auth');
 
 // GET all members
-router.get('/', auth, async (req, res) => {
+router.get('/', auth, adminOrLibrarian, async (req, res) => {
   try {
     const { search } = req.query;
     let query = {};
@@ -22,7 +22,7 @@ router.get('/', auth, async (req, res) => {
 });
 
 // GET single member
-router.get('/:id', auth, async (req, res) => {
+router.get('/:id', auth, adminOrLibrarian, async (req, res) => {
   try {
     const member = await Member.findById(req.params.id).populate('booksIssued');
     if (!member) return res.status(404).json({ message: 'Member not found' });
@@ -33,7 +33,7 @@ router.get('/:id', auth, async (req, res) => {
 });
 
 // POST add member
-router.post('/', [auth,
+router.post('/', [auth, adminOrLibrarian,
   body('name').notEmpty(),
   body('email').isEmail(),
   body('phone').notEmpty()
@@ -52,7 +52,7 @@ router.post('/', [auth,
 });
 
 // PUT update member
-router.put('/:id', auth, async (req, res) => {
+router.put('/:id', auth, adminOrLibrarian, async (req, res) => {
   try {
     const member = await Member.findByIdAndUpdate(req.params.id, req.body, { new: true });
     if (!member) return res.status(404).json({ message: 'Member not found' });
@@ -63,7 +63,7 @@ router.put('/:id', auth, async (req, res) => {
 });
 
 // DELETE member
-router.delete('/:id', auth, async (req, res) => {
+router.delete('/:id', auth, adminOrLibrarian, async (req, res) => {
   try {
     await Member.findByIdAndDelete(req.params.id);
     res.json({ message: 'Member deleted successfully' });

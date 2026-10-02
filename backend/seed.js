@@ -1,19 +1,34 @@
-require('dns').setServers(['8.8.8.8', '1.1.1.1']);
 const mongoose = require('mongoose');
 require('dotenv').config();
 
-mongoose.connect(process.env.MONGO_URI).then(async () => {
+const seedAdmin = async () => {
+  const { ADMIN_EMAIL, ADMIN_PASSWORD, ADMIN_NAME, MONGO_URI } = process.env;
+  if (!ADMIN_EMAIL || !ADMIN_PASSWORD) {
+    throw new Error('Set ADMIN_EMAIL and ADMIN_PASSWORD in backend/.env before seeding');
+  }
+
+  await mongoose.connect(MONGO_URI || 'mongodb://127.0.0.1:27017/librarydb');
   const User = require('./models/User');
-  await User.deleteOne({ email: 'admin@library.com' });
+  const email = ADMIN_EMAIL.trim().toLowerCase();
+  const existingAdmin = await User.findOne({ email });
+
+  if (existingAdmin) {
+    console.log('Admin account already exists; no changes made.');
+    return;
+  }
+
   await User.create({
-    name: 'Admin',
-    email: 'admin@library.com',
-    password: 'Admin@123',
+    name: ADMIN_NAME || 'Library Admin',
+    email,
+    password: ADMIN_PASSWORD,
     role: 'admin'
   });
-  console.log('Admin created!');
-  process.exit();
-}).catch(err => {
-  console.log('Error:', err.message);
-  process.exit();
-});
+  console.log(`Admin account created for ${email}`);
+};
+
+seedAdmin()
+  .catch(err => {
+    console.error('Admin seed failed:', err.message);
+    process.exitCode = 1;
+  })
+  .finally(() => mongoose.disconnect());

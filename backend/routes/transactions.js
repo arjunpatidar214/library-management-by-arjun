@@ -3,12 +3,19 @@ const router = express.Router();
 const Transaction = require('../models/Transaction');
 const Book = require('../models/Book');
 const Member = require('../models/Member');
-const { auth } = require('../middleware/auth');
+const { auth, adminOrLibrarian } = require('../middleware/auth');
 
 // GET all transactions
 router.get('/', auth, async (req, res) => {
   try {
-    const transactions = await Transaction.find()
+    const query = {};
+    if (req.user.role === 'member') {
+      const member = await Member.findOne({ email: req.user.email }).select('_id');
+      if (!member) return res.json([]);
+      query.member = member._id;
+    }
+
+    const transactions = await Transaction.find(query)
       .populate('book', 'title author isbn')
       .populate('member', 'name email membershipId')
       .populate('issuedBy', 'name')
@@ -20,7 +27,7 @@ router.get('/', auth, async (req, res) => {
 });
 
 // POST issue book
-router.post('/issue', auth, async (req, res) => {
+router.post('/issue', auth, adminOrLibrarian, async (req, res) => {
   try {
     const { bookId, memberId, dueDate } = req.body;
 
@@ -54,7 +61,7 @@ router.post('/issue', auth, async (req, res) => {
 });
 
 // PUT return book
-router.put('/return/:id', auth, async (req, res) => {
+router.put('/return/:id', auth, adminOrLibrarian, async (req, res) => {
   try {
     const transaction = await Transaction.findById(req.params.id);
     if (!transaction) return res.status(404).json({ message: 'Transaction not found' });
@@ -84,7 +91,7 @@ router.put('/return/:id', auth, async (req, res) => {
 });
 
 // GET overdue books
-router.get('/overdue', auth, async (req, res) => {
+router.get('/overdue', auth, adminOrLibrarian, async (req, res) => {
   try {
     const overdue = await Transaction.find({
       status: 'issued',
