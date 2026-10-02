@@ -115,7 +115,7 @@ During local development the frontend uses `http://localhost:5000/api`. In produ
 ### Auth
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| POST | /api/auth/register | Register new user |
+| POST | /api/auth/register | Register new member |
 | POST | /api/auth/login | Login |
 | GET | /api/auth/me | Get current user |
 
